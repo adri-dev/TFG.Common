@@ -15,7 +15,11 @@ variable "cluster_name" {
 }
 
 variable "resource_group_name" {
-  default = "tfg-k8s-rg"
+  default = "tfg-k8s"
+}
+
+variable "storage_account_name" {
+  default = "tfgterraformst"
 }
 
 variable "ARM_CLIENT_ID" {
@@ -23,5 +27,13 @@ variable "ARM_CLIENT_ID" {
 }
 
 variable "ARM_CLIENT_SECRET" {
+  sensitive = true
+}
+
+variable "SQL_USER" {
+  sensitive = true
+}
+
+variable "SQL_PASSWORD" {
   sensitive = true
 }

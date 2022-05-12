@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "tfg-k8s-rg"
-    storage_account_name = "tfgk8sterraformstate"
+    resource_group_name  = "tfg-k8s"
+    storage_account_name = "tfgterraformst"
     container_name       = "tfstate"
-    key                  = "NxO+fwNupwtmG1j8NUXAHwXe/vk10uyCsh/wLGDUDteZNa/n412rTSI7Negi+L0w0Er8n3y7tLaHLWv6V8SZug=="
+    key                  = "4tkA9pYy4g4ik3nPmQ6e+vbtvB9D/B1ie1wY9RnsLxnd2SGooGQ2s92eEQlwb9S21I0CesmicFqug6MNHl2sBQ=="
   }
 }
 
@@ -26,7 +26,7 @@ data "azurerm_resource_group" "rg" {
 
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = var.cluster_name
-  location            = "North Europe"
+  location            = data.azurerm_resource_group.rg.location
   resource_group_name = data.azurerm_resource_group.rg.name
   dns_prefix          = var.dns_prefix
 
@@ -43,5 +43,18 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
   tags = {
     Environment = "Development"
+  }
+}
+
+resource "azurerm_mssql_server" "sql" {
+  name                         = "tfg-sql-svr"
+  resource_group_name          = data.azurerm_resource_group.rg.name
+  location                     = "centralindia"
+  version                      = "12.0"
+  administrator_login          = var.SQL_USER
+  administrator_login_password = var.SQL_PASSWORD
+
+  tags = {
+    environment = "Development"
   }
 }
